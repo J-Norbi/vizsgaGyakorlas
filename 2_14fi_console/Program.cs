@@ -16,11 +16,11 @@ namespace _2_14fi_console
             Console.WriteLine((double)oneKolbasz.taste / 2);
             Console.WriteLine((int)(1.5));
             string number = "666";
-            Console.WriteLine((int)(int.Parse(number)+1.9));
+            Console.WriteLine((int)(int.Parse(number) + 1.9));
             FileReader reader = new FileReader();
             List<string> allLines = reader.readFile("kolbasz.txt");
             //all = reader.readFile("kolbasz.txt");
-            all.Add(("sajt szalonna").Substring(5,5));
+            all.Add(("sajt szalonna").Substring(5, 5));
             Console.WriteLine(all.Last());
             Console.WriteLine(all.Last().IndexOf('a'));
             Console.WriteLine(all.Last().IndexOf("lo"));
@@ -41,19 +41,199 @@ namespace _2_14fi_console
             Console.WriteLine(r.Next(1));    //  matematikailag: 0 <= x < 1      
             Console.WriteLine(r.Next(10));    //0,1,2,3,4,5,6,7,8,9
 
-            Console.WriteLine(r.Next(10,21));   //math: 10 <= x < 21
+            Console.WriteLine(r.Next(10, 21));   //math: 10 <= x < 21
             //PI, sqrt, pow, round
-            Console.WriteLine(Math.Pow(10,Math.PI));
+            Console.WriteLine(Math.Pow(10, Math.PI));
 
 
             int num = int.MinValue;
-            Console.WriteLine(num-1);
+            Console.WriteLine(num - 1);
             uint num2 = uint.MinValue;
-            Console.WriteLine(num2-1);
+            Console.WriteLine(num2 - 1);
             /*Console.WriteLine(int.MaxValue);
             Console.WriteLine(double.MinValue);
             Console.WriteLine(double.MaxValue);*/
 
+            Console.WriteLine(String.Join(';', allLines));
+            // "első sor..."
+            Console.WriteLine("r betű az első sorban: " + allLines.First().IndexOf('r'));
+            Console.WriteLine("második sor a fájlban: " + allLines.IndexOf("második sor"));
+
+            bool logicValue = false;
+            logicValue = !logicValue;
+            logicValue = true;
+            logicValue = 4 < 9;
+            // <, >, <=, >=, ==, !=
+            if (gyumolcs.Contains("alma"))
+            {
+                Console.WriteLine("van benne alma");
+            }
+            else
+            {
+                Console.WriteLine("Nincs benne alma");
+            }
+
+
+            if (gyumolcs.Length > 14)
+            {
+                Console.WriteLine("Ez több gyümölcs");
+            }
+            else if (gyumolcs.Length >= 4)
+            {
+                Console.WriteLine("Ez valószínűleg 1 gyümölcs");
+            }
+            else
+            {
+                Console.WriteLine("Ez valószínűleg nem gyümölcs. Túl rövid a szó.");
+            }
+
+            // hármas operátor ( ? : )
+            //
+            // így nem használhatom, ha függvényt adok vissza, csak ha értéket adok vissza:
+            //
+            //gyumolcs.Contains("alma") ? Console.WriteLine("van benne alma") : Console.WriteLine("Nincs benne alma");
+            string gyumolcsVolt = gyumolcs.Contains("alma") ? "van benne alma" : "Nincs benne alma";
+            Console.WriteLine(gyumolcsVolt);
+
+            bool IdItMorning = DateTime.Now.Hour >= 12 ? false : true;
+            // szövegesen:
+            string IdItMorning2 = DateTime.Now.Hour >= 12 ? "nincs már reggel" : "Reggel van még";
+            Console.WriteLine(IdItMorning2);
+
+            string szoveg = "aúsdH.giÁof123";
+            foreach (char letter in szoveg)
+            {
+                // pattern matching - mintázat felismerés
+                // ez mindig gyorsabb, mint az if - else
+                // feltételek összefűzése: 'and', 'or'
+                string betuE = letter switch
+                {
+                    >= '0' and <= '9' => "szám",
+                    >= 'a' and <= 'z' => "kisbetű",
+                    >= 'A' and <= 'Z' => "nagybetű",
+                    'á' or 'é' or 'í' or 'ó' or 'ö' or 'ő' or 'ú' or 'ü' or 'ű' => "magyar ékezetes kisbetű",
+                    'Á' or 'É' or 'Í' or 'Ó' or 'Ö' or 'Ő' or 'Ú' or 'Ü' or 'Ű' => "magyar ékezetes nagybetű",
+                    _ => "egyéb karakter" // mint az else ág
+                };
+                Console.WriteLine("A karakter: " + letter + " " + betuE);
+            }
+
+            // számok kiírása 1 - 10-ig
+            Console.WriteLine("számok kiírása 1 - 10-ig");
+            for (int i = 1; i <= 10; i++)
+            {
+                Console.WriteLine(i);
+            }
+            // páros számok kiírása 100-ig
+            Console.WriteLine("páros számok kiírása 100-ig");
+            for (int i = 0; i <= 100; i += 2)
+            {
+                Console.WriteLine(i);
+            }
+            // hattal osztható számok 55-ig
+            Console.WriteLine("hattal osztható számok 55-ig");
+            for (int i = 0; i <= 54; i += 6)
+            {
+                Console.WriteLine(i);
+            }
+            // páratlan számok 10-től 33-ig
+            Console.WriteLine("páratlan számok 10-től 33-ig");
+            for (int i = 11; i <= 33; i += 2)
+            {
+                Console.WriteLine(i);
+            }
+            // számok 100-tól 1-ig
+            Console.WriteLine("számok 100-tól 1-ig");
+            for (int i = 100; i >= 1; i--)
+            {
+                Console.WriteLine(i);
+            }
+            // páros számok 66-tól 11-ig
+            Console.WriteLine("páros számok 66-tól 11-ig");
+            for (int i = 66; i >= 11; i -= 2)
+            {
+                Console.WriteLine(i);
+            }
+
+            // gyümölcs változót karakterenként kiíratni
+            Console.WriteLine("gyümölcs változót karakterenként kiíratni");
+            for (int i = 0; i < gyumolcs.Length; i++)
+            {
+                Console.WriteLine(gyumolcs[i]);
+            }
+            // írjuk ki a gyümölcs változót visszafelé
+            Console.WriteLine("írjuk ki a gyümölcs változót visszafelé");
+            for (int i = gyumolcs.Length - 1; i >= 0; i--)
+            {
+                Console.WriteLine(gyumolcs[i]);
+            }
+
+            bool voltBenneSzo = false;
+            int index = 0;
+            while (!voltBenneSzo && index < (allLines.Count - 1))
+            {
+                if (allLines[index].Contains("sajt"))
+                {
+                    voltBenneSzo = true;
+                    // break: teljes ciklus leállítása
+                    // continue: a ciklus következő iterációjára ugrik
+                    continue;
+                }
+                index++;
+            }
+            Console.WriteLine(voltBenneSzo ? "Volt benne szó" : "Nem volt benne szó");
+
+            // legalább egyszer leellenőrzi a feltételt - hátul tesztelő ciklus
+            // ritkán használjuk
+            /*
+            
+            do
+            {
+                Console.WriteLine("jaj de jó"); // végtelen ciklus - mert a feltétel mindig igaz
+            } while (voltBenneSzo);
+            
+            */
+
+
+            // Tömbök
+            int[] szamok = new int[3];      // adott méretű tömb
+            szamok[0] = 0;
+            szamok[1] = 7;
+            szamok[2] = 11;
+
+            List<int> szamokLista = new();  // dinamikus méretű tömb
+            szamokLista.Add(0);
+            szamokLista.Add(7);
+            szamokLista.Add(11);
+
+            // több dimenziós tömb
+            /*int[,] matrix = new int[2, 2]; // 2x2 mátrix
+            matrix[0, 0] = 0;
+            matrix[1, 0] = 1;
+            matrix[0, 1] = 1;
+            matrix[1, 1] = 0;*/
+
+            int[,] matrix;
+            int matrixMerete = 10;
+
+            matrix = new int[matrixMerete, matrixMerete]; // 10x10 mátrix
+
+            for (int i = 0; i < matrixMerete; i++)
+            {
+                for (int j = 0; j < matrixMerete; j++)
+                {
+                    matrix[i,j] = (j % 2 + i % 2) % 2;
+                }
+            }
+
+            for (int magassag = 0; magassag < matrix.GetLength(1); magassag++)
+            {
+                for (int szelesseg = 0; szelesseg < matrix.GetLength(0); szelesseg++)
+                {
+                    Console.Write(matrix[magassag, szelesseg] + " ");
+                }
+                Console.Write('\n');
+            }
         }
     }
     class FileReader
