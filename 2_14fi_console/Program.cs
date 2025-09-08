@@ -143,9 +143,11 @@ namespace _2_14fi_console
                 Console.WriteLine(i);
             }
             // számok 100-tól 1-ig
+            List<int> visszafeleSzamok = new();
             Console.WriteLine("számok 100-tól 1-ig");
             for (int i = 100; i >= 1; i--)
             {
+                visszafeleSzamok.Add(i);
                 Console.WriteLine(i);
             }
             // páros számok 66-tól 11-ig
@@ -222,7 +224,7 @@ namespace _2_14fi_console
             {
                 for (int j = 0; j < matrixMerete; j++)
                 {
-                    matrix[i,j] = (j % 2 + i % 2) % 2;
+                    matrix[i, j] = (j % 2 + i % 2) % 2;
                 }
             }
 
@@ -234,6 +236,51 @@ namespace _2_14fi_console
                 }
                 Console.Write('\n');
             }
+            //
+            // lista lambda kifejezéssel (valami =>valami % x == y)
+            //
+            int listaDarabszam = visszafeleSzamok.Count(szam => szam % 2 == 0);
+            Console.WriteLine("páros számok 100-tól 1-ig: " + listaDarabszam);
+
+            int listaDarabszam2 = visszafeleSzamok.Count(szam => szam % 2 == 0 && szam % 3 == 0);
+            Console.WriteLine("2-vel és 3-mal osztható számok mennyisége 100-tól 1-ig: " + listaDarabszam2);
+
+            List<int> hattalOszthato = visszafeleSzamok.Where(kolbasz => kolbasz % 6 == 0).ToList();
+            hattalOszthato.Sort();
+            Console.WriteLine(String.Join(' ', hattalOszthato));
+
+            List<Kolbasz> kolbaszok = new();
+            for (int i = 30; i > 0; i--)
+            {
+                kolbaszok.Add(new Kolbasz(i));
+            }
+            kolbaszok = kolbaszok.OrderBy(k => k.taste).ToList();
+            Console.WriteLine(String.Join(' ', kolbaszok.Select(kolbasz => kolbasz.taste)));
+            /*
+             * vagy 
+             * IEnumerable<Kolbasz> sortedKolbaszok = kolbaszok.OrderBy(k => k.taste);
+             * Console.WriteLine(String.Join(' ', sortedKolbaszok.Select(kolbasz => kolbasz.taste)));
+            */
+
+            // írjuk ki a 7-mal osztható tastel rendelkező kolbászokat, hogy mennyi a taste értékük soronként
+            // csökkenő sorrendben
+            Console.WriteLine(String.Join(' ',
+                kolbaszok.Where(k => k.taste % 7 == 0)
+                .Select(k => k.taste)
+                .OrderByDescending(k => k)));
+            // írjuk ki annak a kolbásznak az id-ját, aminek az átlag tastje van, egészre kerekítve.
+            Console.WriteLine(kolbaszok.Average(k=>k.taste));
+            int atlagID = kolbaszok.FindIndex(k => k.taste == (int)Math.Round(kolbaszok.Average(a => a.taste)));
+
+            Console.WriteLine(atlagID);
+
+            // minden változónak van egy default értéke
+            bool logicalValue2 = default; // false
+            int szam = default; // 0
+            string szoveg2 = default; // null
+            Console.WriteLine(logicalValue2);
+            char karakter = default; // '\0' - null karakter
+            Console.WriteLine("char: " + karakter);
         }
     }
     class FileReader
@@ -247,8 +294,9 @@ namespace _2_14fi_console
                 {
                     lines.Add(item);
                 }
+                throw new Exception("Valami hiba történt"); // csak a példa miatt
             }
-            catch (Exception e)
+            catch (Exception e) // rengeteg féle exception van
             {
                 Console.WriteLine(e.Message);
             }
@@ -260,6 +308,9 @@ namespace _2_14fi_console
         public static string text = "A kolbász finom";
         public int taste { get; private set; }
         private int taste2 = 0;
+
+        // minden classnek van egy default konstruktora, egészen addig, amíg nem hozol létre egy sajátot
+        // default konstruktor: létrehoz egy classt, minden változó értékét a default értékre állítja
         public Kolbasz(int taste = 0)
         {
             this.taste = taste;
