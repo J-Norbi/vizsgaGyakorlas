@@ -269,7 +269,7 @@ namespace _2_14fi_console
                 .Select(k => k.taste)
                 .OrderByDescending(k => k)));
             // írjuk ki annak a kolbásznak az id-ját, aminek az átlag tastje van, egészre kerekítve.
-            Console.WriteLine(kolbaszok.Average(k=>k.taste));
+            Console.WriteLine(kolbaszok.Average(k => k.taste));
             int atlagID = kolbaszok.FindIndex(k => k.taste == (int)Math.Round(kolbaszok.Average(a => a.taste)));
 
             Console.WriteLine(atlagID);
@@ -281,6 +281,122 @@ namespace _2_14fi_console
             Console.WriteLine(logicalValue2);
             char karakter = default; // '\0' - null karakter
             Console.WriteLine("char: " + karakter);
+
+            Console.WriteLine("--------------------------------------------------------------------");
+
+            //List<Car> cars = new();
+            List<IVehicle> cars = new();
+            cars.Add(new Car("Honda") { year = 1992, power = 125, topSpeed = 190 });    // int => 0; string => NULL
+            cars.Add(new Car("Trabant") { year = 1990, model = "1.1", power = 38, topSpeed = 135});
+
+            Console.WriteLine((cars.Last()as Car).make);
+            Console.WriteLine((cars.Last()as Car).model);
+            Console.WriteLine(cars.Last().year);
+
+            if (cars[0].CompareTo(cars[1]) > 0)
+                Console.WriteLine("A Honda erősebb");
+            else if(cars[0].CompareTo(cars[1]) == 0)
+                Console.WriteLine("Egyenlő erősek");
+            else
+                Console.WriteLine("A Trabant erősebb");
+
+            cars.Sort();    // ezt a CompareTo metódus alapján csinálja. E nélkül nem tudná, hogyan kell sorrendezni a Car objektumokat
+
+            Console.WriteLine(String.Join(' ', cars.Select(car => car.power)));
+
+            cars.Add(new Motorcycle() { year = 2020, power = 150, topSpeed = 280 });
+            Console.WriteLine(String.Join(' ', cars.Select(car => car.power)));
+            Console.WriteLine(String.Join(' ', cars.Select(car => car.year)));
+
+
+            int motorcycleCount = cars.Count(car => car is Motorcycle); // mennyi motor van a listában
+            Console.WriteLine(motorcycleCount + " db motor típus van");
+            int carCount = cars.Count(car => car is Car);
+            Console.WriteLine(carCount + " db autó típus van");
+
+            //List<IVehicle> over150 = cars.Where(car => car.topSpeed > 150).ToList();
+            IEnumerable<IVehicle> over150 = cars.Where(car => car.topSpeed > 150);
+
+            Console.WriteLine(String.Join(' ', over150.Select(car => car.topSpeed)));
+        }
+    }
+    internal class  Motorcycle : IVehicle
+    {
+        public int power { get; set; }
+        public int year { get; set; }
+        public int topSpeed { get; set; }
+
+        public int CompareTo(IVehicle? obj)
+        {
+            return power - obj.power;
+        }
+
+        public double Move(int distance)
+        {
+            return (double)distance / topSpeed * 1.1;
+        }
+    }
+    internal interface IVehicle : IComparable<IVehicle>
+    {
+        public int power { get; set; }
+        public int year { get; set; }
+        public int topSpeed { get; set; }
+        public double Move(int distance);
+    }
+
+    // 3.7.4.6.1
+    // IComparable interface implementálása, ami a CompareTo metódust követeli meg és segíti az objektumok sorrendezését
+    internal class Car : IVehicle, IComparable<IVehicle>
+    {
+        public int power { get; set; }
+        public string make { get; set; }
+        private string _model = "";
+        public string model
+        {
+            get
+            {
+                if (_model.Length < 2)
+                {
+                    return "Még nincs beállítva a modell";
+                }
+                return _model;
+            }
+            set
+            {
+                _model = value;
+            }
+        }
+
+        private int _year;  // ez lesz a változó, amit a year property kezel
+        public int year
+        {   // ez a publikus property, már függvényként viselkedik
+            get
+            {
+                return _year;
+            }
+            set
+            {
+                if (value <= DateTime.UtcNow.Year && value > 1896)
+                    _year = value;
+                else
+                    throw new Exception("Hibás évjárat");
+            }
+        }
+
+        public int topSpeed { get; set; }
+
+        public Car(string make = "")
+        {
+            this.make = make;
+        }
+        public int CompareTo(IVehicle? other)
+        {
+            return power - other.power;
+        }
+
+        public double Move(int distance)
+        {
+            return (double)distance / topSpeed;     // a double azért kell, hogy ne egész szám legyen a visszatérési érték -> típus kényszerítés (konverzió)
         }
     }
     class FileReader
