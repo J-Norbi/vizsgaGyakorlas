@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using System.Diagnostics;
+using System.Text;
 
 namespace _2_14fi_console
 {
@@ -318,6 +319,60 @@ namespace _2_14fi_console
             IEnumerable<IVehicle> over150 = cars.Where(car => car.topSpeed > 150);
 
             Console.WriteLine(String.Join(' ', over150.Select(car => car.topSpeed)));
+
+
+            //--------------------------------2025.09.18.---------------------------------
+
+            //Teacher oneTeacher = new Teacher("Informatika", 20);
+            List<Teacher> allTeacher = new();
+            allTeacher.Add(new("Zsömi",DateTime.Parse("2019.09.11"),"Kutya","IT", 21));
+            allTeacher.Add(new("Józsi", DateTime.Parse("1980.05.01"), "Férfi", "Történelem,Magyar", 16, "10.A"));
+            allTeacher.Add(new("Buskó Péter", DateTime.Parse("2000.01.01"), "Férfi", "Történelem,Magyar", 18, "13.C"));
+            Console.WriteLine("\nKi a legidősebb tanár?");
+            Teacher result = allTeacher.Where(teacher => teacher.Age() == allTeacher.Max(t => t.Age())).First();
+            Console.WriteLine(result);
+            Console.WriteLine("\nKi a legfiatalabb tanár?");
+            Teacher young = allTeacher.Where(teacher => teacher.Age() == allTeacher.Min(t => t.Age())).First();
+            Console.WriteLine(young);
+
+            List<Student> allStudents = new();
+            allStudents.Add(new("Buskó Péter", DateTime.Parse("2000.01.01"), "Legend", "A", 711111111, 10, 500));
+            allStudents.Add(new("Krisztina", DateTime.Parse("1990.03.04"), "Nő", "A", 54321, 10, 300));
+
+            Console.WriteLine("\nMennyi volt az összes hiányzás?");
+            int totalMissedHours = allStudents.Sum(s => s.MissedHours);
+            Console.WriteLine($"Hiányzott órák száma: {totalMissedHours}");
+
+            // Közös lista
+            List<Person> allPeople = new();
+            allPeople.AddRange(allTeacher);
+            allPeople.AddRange(allStudents);
+
+            Console.WriteLine("\nÖsszes ember a listában:");
+            foreach (Person item in allPeople)
+            {
+                Console.WriteLine(item.ToString());
+            }
+            // minden item fizetése
+            foreach (Person item in allPeople)
+            {
+                if (item is Teacher)
+                {
+                    Console.WriteLine((item as Teacher).Salary());
+                }
+                else if (item is Student)
+                {
+                    Console.WriteLine((item as Student).Grade);
+                }
+            }
+
+            // köszönjünk mindenkinek
+            foreach (Person item in allPeople)
+            {
+                Console.WriteLine(item.Welcome());
+            }
+
+
         }
     }
     internal class  Motorcycle : IVehicle
@@ -399,6 +454,89 @@ namespace _2_14fi_console
             return (double)distance / topSpeed;     // a double azért kell, hogy ne egész szám legyen a visszatérési érték -> típus kényszerítés (konverzió)
         }
     }
+
+    class Teacher: Person
+    {
+        public Teacher(string name, DateTime birthDate, string gender, string department, int hours, string Class = ""):base(name,birthDate,gender) // a base kulcsszóval hívom a szülő osztály konstruktorát
+        {
+            Department = department;
+            Hours = hours;
+            this.Class = Class;
+        }
+        public string Department { get; set; } 
+        public string Class { get; set; }
+        public int Hours { get; set; }
+        const int salary = 600000;
+        const int fullTime = 22;
+        public int DepartmentCount()
+        {
+            return Department.Split(',').Count();
+        }
+        public bool ClassTeacher()
+        {
+            return Class.Length > 1;
+        }
+        public int Salary()
+        {
+            return (int)((double)salary / fullTime * Hours);
+        }
+        public override string ToString()
+        {
+            return $"Név: {Name}, munkaközösség: {Department}, dolgozott heti órák: {Hours}";
+        }
+        public override string Welcome()
+        {
+            return $"Üdvözlet {Name}";
+        }
+    }
+    class Student: Person
+    {
+        public string Class { get; set; }
+        public int EducationID { get; set; }
+        public int Grade { get; set; }
+        public int MissedHours  { get; set; }
+        public Student(string name, DateTime birthDate, string gender, string Class, int EducationID, int Grade, int MissedHours):base(name, birthDate, gender)
+        {
+            this.Class = Class;
+            this.EducationID = EducationID;
+            this.Grade = Grade;
+            this.MissedHours = MissedHours;
+        }
+        public bool Compulsory()
+        {
+            return Age() < 16;
+        }
+        public bool ExamRetake()
+        {
+            return MissedHours >= 250;
+        }
+        public override string ToString()
+        {
+            return $"{Name} - {Grade}.{Class}";
+        }
+    }
+    class Person
+    {
+        public string Name { get; set; }
+        public DateTime BirthDate { get; set; }
+        public string Gender { get; set; }
+        public Person(string name, DateTime birthDate, string gender)
+        {
+            Name = name;
+            BirthDate = birthDate;
+            Gender = gender;
+        }
+        public virtual string Welcome()
+        {
+            return $"Üdv {Name}";
+        }
+        public int Age()
+        {
+            return (DateTime.UtcNow - BirthDate).Days / 365;
+        }
+    }
+
+
     class FileReader
     {
         public List<string> readFile(string fileName)
